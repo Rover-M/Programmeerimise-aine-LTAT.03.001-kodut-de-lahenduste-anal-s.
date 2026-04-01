@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Võrdlus{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Võrdlus</h1>
+    <p>Siin saad kahte faili käsitsi kõrvuti võrrelda.</p>
+</div>
+
+{% if comparison_ready %}
+    <div class="comparison-header card">
+        <div class="comparison-meta">
+            <div>
+                <strong>Vasak fail:</strong> {{ file_a_name }}
+            </div>
+            <div>
+                <strong>Parem fail:</strong> {{ file_b_name }}
+            </div>
+        </div>
+    </div>
+
+    <div class="comparison-grid">
+        <div class="code-card">
+            <div class="code-card-header">{{ file_a_name }}</div>
+            <pre class="code-block"><code>{{ file_a_content }}</code></pre>
+        </div>
+
+        <div class="code-card">
+            <div class="code-card-header">{{ file_b_name }}</div>
+            <pre class="code-block"><code>{{ file_b_content }}</code></pre>
+        </div>
+    </div>
+{% else %}
+    <div class="card">
+        <p>Võrdluse avamiseks vali kõigepealt analüüsi lehelt mõni failipaar.</p>
+    </div>
+{% endif %}
+{% endblock %}

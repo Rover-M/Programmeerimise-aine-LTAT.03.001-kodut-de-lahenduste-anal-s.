@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kodutööde analüsaator{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Kodutööde analüsaator</h2>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('upload_page') }}"
+                   class="nav-item {% if request.endpoint == 'upload_page' %}active{% endif %}">
+                    1. Üleslaadimine
+                </a>
+
+                <a href="{{ url_for('analysis_page') }}"
+                   class="nav-item {% if request.endpoint == 'analysis_page' %}active{% endif %}">
+                    2. Analüüs
+                </a>
+
+                <a href="{{ url_for('comparison_page') }}"
+                   class="nav-item {% if request.endpoint == 'comparison_page' %}active{% endif %}">
+                    3. Võrdlus
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

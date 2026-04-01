@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Analüüs{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Analüüs</h1>
+    <p>Siin kuvatakse failide omavaheline sarnasus.</p>
+</div>
+
+<div class="card">
+    <form action="{{ url_for('run_analysis_route') }}" method="POST">
+        <button type="submit" class="primary-btn">Käivita analüüs</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Analüüsi tulemused</h2>
+
+    {% if results %}
+        <div class="results-table-wrapper">
+            <table class="results-table grouped-table">
+                <thead>
+                    <tr class="group-header-row">
+                        <th rowspan="2" class="group-end">Fail</th>
+                        <th colspan="3" class="group-end">Tööde omavaheline võrdlus</th>
+                        <th colspan="3" class="group-end">AI näidislahenduste võrdlus</th>
+                        <th rowspan="2">Õppematerjali sarnasus</th>
+                    </tr>
+                    <tr>
+                        <th>Kõige sarnasem töö</th>
+                        <th>Otsene sarnasus</th>
+                        <th class="group-end">Sarnasus ilma muutujanimedeta</th>
+
+                        <th>Kõige sarnasem AI lahendus</th>
+                        <th>Otsene sarnasus</th>
+                        <th class="group-end">Sarnasus ilma muutujanimedeta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                        <tr>
+                            <td class="group-end">{{ result.file_name }}</td>
+
+                            <td>
+                                {% if result.best_match_name %}
+                                    <a class="table-link"
+                                       href="{{ url_for('comparison_page', file_a=result.file_name, file_b=result.best_match_name) }}">
+                                        {{ result.best_match_name }}
+                                    </a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <span class="percent-badge
+                                    {% if result.raw_similarity_value is not none %}
+                                        {% if result.raw_similarity_value > 90 %}
+                                            percent-high
+                                        {% elif result.raw_similarity_value >= 80 %}
+                                            percent-medium
+                                        {% else %}
+                                            percent-low
+                                        {% endif %}
+                                    {% endif %}">
+                                    {{ result.raw_similarity }}
+                                </span>
+                            </td>
+
+                            <td class="group-end">
+                                <span class="percent-badge
+                                    {% if result.normalized_similarity_value is not none %}
+                                        {% if result.normalized_similarity_value > 90 %}
+                                            percent-high
+                                        {% elif result.normalized_similarity_value >= 80 %}
+                                            percent-medium
+                                        {% else %}
+                                            percent-low
+                                        {% endif %}
+                                    {% endif %}">
+                                    {{ result.normalized_similarity }}
+                                </span>
+                            </td>
+
+                            <td>{{ result.ai_best_match_name }}</td>
+
+                            <td>
+                                <span class="percent-badge
+                                    {% if result.ai_raw_similarity_value > 90 %}
+                                        percent-high
+                                    {% elif result.ai_raw_similarity_value >= 80 %}
+                                        percent-medium
+                                    {% else %}
+                                        percent-low
+                                    {% endif %}">
+                                    {{ result.ai_raw_similarity }}
+                                </span>
+                            </td>
+
+                            <td class="group-end">
+                                <span class="percent-badge
+                                    {% if result.ai_normalized_similarity_value > 90 %}
+                                        percent-high
+                                    {% elif result.ai_normalized_similarity_value >= 80 %}
+                                        percent-medium
+                                    {% else %}
+                                        percent-low
+                                    {% endif %}">
+                                    {{ result.ai_normalized_similarity }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="percent-badge
+                                    {% if result.material_similarity_value > 90 %}
+                                        percent-high
+                                    {% elif result.material_similarity_value >= 80 %}
+                                        percent-medium
+                                    {% else %}
+                                        percent-low
+                                    {% endif %}">
+                                    {{ result.material_similarity }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>Analüüsi ei ole veel käivitatud.</p>
+    {% endif %}
+</div>
+{% endblock %}

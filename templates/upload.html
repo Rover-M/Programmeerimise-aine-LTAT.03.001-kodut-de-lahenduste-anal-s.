@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Üleslaadimine{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Üleslaadimine</h1>
+    <p>Lae siia üles Pythoni kodutööd analüüsimiseks.</p>
+</div>
+
+<div class="card">
+    <form id="uploadForm" action="{{ url_for('upload_files') }}" method="POST" enctype="multipart/form-data">
+        <label for="fileInput" class="drop-zone" id="dropZone">
+            <div class="drop-zone-content">
+                <h3>Lohista failid siia</h3>
+                <p>või vajuta siia, et failid valida</p>
+            </div>
+            <input type="file" id="fileInput" name="files" multiple hidden>
+        </label>
+
+        <div class="selected-files">
+            <h3>Valitud failid</h3>
+            <ul id="selectedFileList" class="file-list">
+                <li class="placeholder">Faile pole veel valitud.</li>
+            </ul>
+        </div>
+
+        <div class="button-row">
+            <button type="submit" class="primary-btn">Lae failid üles</button>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Üles laaditud failid</h2>
+
+    {% if uploaded_files %}
+        <ul class="uploaded-list">
+            {% for file in uploaded_files %}
+                <li>{{ file }} — üles laaditud</li>
+            {% endfor %}
+        </ul>
+
+        <div class="button-row top-spacing">
+            <form action="{{ url_for('run_analysis_route') }}" method="POST">
+                <button type="submit" class="primary-btn">Analüüsi</button>
+            </form>
+
+            <form action="{{ url_for('delete_all_files') }}" method="POST" onsubmit="return confirm('Kas kustutada kõik failid?');">
+                <button type="submit" class="danger-btn">Kustuta kõik failid</button>
+            </form>
+        </div>
+    {% else %}
+        <p>Ühtegi faili ei ole veel üles laaditud.</p>
+    {% endif %}
+</div>
+{% endblock %}
